@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Shop Checkout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
+        }
+        
+        .section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .product-info h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .product-info .price {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-add {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-add:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: #28a745;
+            color: white;
+            font-size: 1.2rem;
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn-primary:hover {
+            background: #218838;
+            transform: scale(1.02);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .error {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .cart-item input {
+            width: 60px;
+            padding: 5px;
+            text-align: center;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+        }
+        
+        .cart-summary {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .cart-summary .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .cart-summary .total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .radio-group {
+            margin: 10px 0;
+        }
+        
+        .radio-group label {
+            display: block;
+            padding: 12px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .radio-group label:hover {
+            border-color: #667eea;
+        }
+        
+        .radio-group input[type="radio"] {
+            margin-right: 10px;
+        }
+        
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 20px;
+            border: 2px solid #28a745;
+        }
+        
+        .discount-section {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .discount-section input {
+            flex: 1;
+        }
+        
+        .btn-apply {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn-apply:hover {
+            background: #5568d3;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛒 E-Shop Checkout</h1>
+            <p>Complete your purchase in a few simple steps</p>
+        </div>
+        
+        <div class="content">
+            <!-- Left Column: Products -->
+            <div>
+                <div class="section">
+                    <h2>🎁 Available Products</h2>
+                    
+                    <div class="product-item">
+                        <div class="product-info">
+                            <h3>Premium Headphones</h3>
+                            <p class="price">$199.99</p>
+                        </div>
+                        <button class="btn btn-add" id="add-product-1" onclick="addToCart(1, 'Premium Headphones', 199.99)">Add to Cart</button>
+                    </div>
+                    
+                    <div class="product-item">
+                        <div class="product-info">
+                            <h3>Wireless Mouse</h3>
+                            <p class="price">$49.99</p>
+                        </div>
+                        <button class="btn btn-add" id="add-product-2" onclick="addToCart(2, 'Wireless Mouse', 49.99)">Add to Cart</button>
+                    </div>
+                    
+                    <div class="product-item">
+                        <div class="product-info">
+                            <h3>Mechanical Keyboard</h3>
+                            <p class="price">$129.99</p>
+                        </div>
+                        <button class="btn btn-add" id="add-product-3" onclick="addToCart(3, 'Mechanical Keyboard', 129.99)">Add to Cart</button>
+                    </div>
+                </div>
+                
+                <div class="section" style="margin-top: 30px;">
+                    <h2>🛍️ Shopping Cart</h2>
+                    <div id="cart-items"></div>
+                    
+                    <div class="discount-section">
+                        <input type="text" id="discount-code" placeholder="Enter discount code" />
+                        <button class="btn-apply" onclick="applyDiscount()">Apply</button>
+                    </div>
+                    <div class="error" id="discount-error"></div>
+                    
+                    <div class="cart-summary">
+                        <div class="row">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="row">
+                            <span>Discount:</span>
+                            <span id="discount">$0.00</span>
+                        </div>
+                        <div class="row">
+                            <span>Shipping:</span>
+                            <span id="shipping">$0.00</span>
+                        </div>
+                        <div class="row total">
+                            <span>Total:</span>
+                            <span id="total">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column: Checkout Form -->
+            <div>
+                <div class="section">
+                    <h2>📋 Customer Details</h2>
+                    
+                    <form id="checkout-form">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required />
+                            <div class="error" id="name-error">Name is required</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required />
+                            <div class="error" id="email-error">Please enter a valid email</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Shipping Address *</label>
+                            <input type="text" id="address" name="address" required />
+                            <div class="error" id="address-error">Address is required</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Shipping Method *</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="shipping" value="standard" checked onclick="updateShipping()" />
+                                    Standard Shipping (Free - 5-7 business days)
+                                </label>
+                                <label>
+                                    <input type="radio" name="shipping" value="express" onclick="updateShipping()" />
+                                    Express Shipping ($10.00 - 2-3 business days)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Payment Method *</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="payment" value="credit-card" checked />
+                                    💳 Credit Card
+                                </label>
+                                <label>
+                                    <input type="radio" name="payment" value="paypal" />
+                                    💰 PayPal
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" id="pay-button">💳 Pay Now</button>
+                    </form>
+                    
+                    <div class="success-message" id="success-message">
+                        ✅ Payment Successful! Thank you for your purchase!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let cart = {};
+        let discountRate = 0;
+        let shippingCost = 0;
+        
+        function addToCart(id, name, price) {
+            if (cart[id]) {
+                cart[id].quantity++;
+            } else {
+                cart[id] = { name, price, quantity: 1 };
+            }
+            updateCart();
+        }
+        
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+            
+            for (const [id, item] of Object.entries(cart)) {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <span>${item.name}</span>
+                    <input type="number" value="${item.quantity}" min="0" 
+                           onchange="updateQuantity(${id}, this.value)" />
+                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                `;
+                cartItems.appendChild(cartItem);
+            }
+            
+            updateTotals();
+        }
+        
+        function updateQuantity(id, quantity) {
+            quantity = parseInt(quantity);
+            if (quantity <= 0) {
+                delete cart[id];
+            } else {
+                cart[id].quantity = quantity;
+            }
+            updateCart();
+        }
+        
+        function updateTotals() {
+            let subtotal = 0;
+            for (const item of Object.values(cart)) {
+                subtotal += item.price * item.quantity;
+            }
+            
+            const discount = subtotal * discountRate;
+            const total = subtotal - discount + shippingCost;
+            
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('discount').textContent = `-$${discount.toFixed(2)}`;
+            document.getElementById('shipping').textContent = `$${shippingCost.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+        }
+        
+        function applyDiscount() {
+            const code = document.getElementById('discount-code').value.trim().toUpperCase();
+            const error = document.getElementById('discount-error');
+            
+            if (code === 'SAVE15') {
+                discountRate = 0.15;
+                error.style.display = 'none';
+                alert('✅ 15% discount applied!');
+            } else if (code === 'SAVE20') {
+                discountRate = 0.20;
+                error.style.display = 'none';
+                alert('✅ 20% discount applied!');
+            } else if (code === '') {
+                error.style.display = 'none';
+            } else {
+                discountRate = 0;
+                error.textContent = 'Invalid discount code';
+                error.style.display = 'block';
+            }
+            
+            updateTotals();
+        }
+        
+        function updateShipping() {
+            const shipping = document.querySelector('input[name="shipping"]:checked').value;
+            shippingCost = shipping === 'express' ? 10.00 : 0;
+            updateTotals();
+        }
+        
+        document.getElementById('checkout-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate form
+            let isValid = true;
+            
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const address = document.getElementById('address').value.trim();
+            
+            // Clear previous errors
+            document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
+            
+            if (name === '') {
+                document.getElementById('name-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!email.includes('@') || !email.includes('.')) {
+                document.getElementById('email-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (address === '') {
+                document.getElementById('address-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (Object.keys(cart).length === 0) {
+                alert('Please add items to cart before checkout');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                document.getElementById('success-message').style.display = 'block';
+                document.getElementById('checkout-form').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
